@@ -1,0 +1,98 @@
+XML:
+<?xml version="1.0" encoding="UTF-8"?>
+<employees>
+  <employee>
+    <id>1</id>
+    <name>John Doe</name>
+    <position>Software Engineer</position>
+    <department>Development</department>
+    <salary>75000</salary>
+  </employee>
+  <employee>
+    <id>2</id>
+    <name>Jane Smith</name>
+    <position>Project Manager</position>
+    <department>Project Management</department>
+    <salary>85000</salary>
+  </employee>
+  <employee>
+    <id>3</id>
+    <name>Michael Johnson</name>
+    <position>HR Manager</position>
+    <department>Human Resources</department>
+    <salary>70000</salary>
+  </employee>
+  <employee>
+    <id>4</id>
+    <name>Emily Davis</name>
+    <position>Marketing Specialist</position>
+    <department>Marketing</department>
+    <salary>65000</salary>
+  </employee>
+  <employee>
+    <id>5</id>
+    <name>Robert Brown</name>
+    <position>Quality Assurance</position>
+    <department>Quality</department>
+    <salary>60000</salary>
+  </employee>
+</employees>
+
+
+
+HTML:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Search</title>
+    <script>
+        function getEmployeeDetails() {
+            var employeeId = document.getElementById("employeeId").value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var xmlDoc = this.responseXML;
+                    var employees = xmlDoc.getElementsByTagName("employee");
+                    var employeeFound = false;
+                    var result = "";
+
+                    for (var i = 0; i < employees.length; i++) {
+                        var id = employees[i].getElementsByTagName("id")[0].childNodes[0].nodeValue;
+
+                        if (id == employeeId) {
+                            var name = employees[i].getElementsByTagName("name")[0].childNodes[0].nodeValue;
+                            var position = employees[i].getElementsByTagName("position")[0].childNodes[0].nodeValue;
+                            var department = employees[i].getElementsByTagName("department")[0].childNodes[0].nodeValue;
+                            var salary = employees[i].getElementsByTagName("salary")[0].childNodes[0].nodeValue;
+
+                            result = "Name: " + name + "<br>" +
+                                     "Position: " + position + "<br>" +
+                                     "Department: " + department + "<br>" +
+                                     "Salary: $" + salary;
+
+                            employeeFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!employeeFound) {
+                        result = "Employee with ID " + employeeId + " not found.";
+                    }
+
+                    document.getElementById("employeeDetails").innerHTML = result;
+                }
+            };
+
+            xhttp.open("GET", "employees.xml", true);
+            xhttp.send();
+        }
+    </script>
+</head>
+<body>
+    <h2>Employee Search</h2>
+    <input type="text" id="employeeId" placeholder="Enter Employee ID">
+    <button onclick="getEmployeeDetails()">Search</button>
+    <div id="employeeDetails"></div>
+</body>
+</html>
